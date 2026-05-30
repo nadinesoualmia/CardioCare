@@ -1,0 +1,140 @@
+/* Table Styles */
+.table-container {
+    overflow-x: auto;
+    background-color: var(--bg-card);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+
+.table-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-search {
+    position: relative;
+    width: 300px;
+}
+
+.table-search i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.table-search input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    background-color: #f8fafc;
+}
+
+.table-search input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: #fff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th,
+td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: #f8fafc;
+}
+
+td {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    transition: var(--transition);
+}
+
+.btn-icon.edit {
+    color: var(--primary-color);
+}
+
+.btn-icon.edit:hover {
+    background-color: #eff6ff;
+}
+
+.btn-icon.delete {
+    color: var(--danger-color);
+}
+
+.btn-icon.delete:hover {
+    background-color: #fef2f2;
+}
+
+.btn-icon.view {
+    color: var(--accent-color);
+}
+
+.btn-icon.view:hover {
+    background-color: #ecfdf5;
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .table-search {
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 0.75rem 1rem;
+    }
+}

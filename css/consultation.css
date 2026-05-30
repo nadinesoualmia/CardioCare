@@ -1,0 +1,237 @@
+/* Consultation Page Styles */
+
+/* Main Content Layout */
+.main-content {
+    margin-left: 260px;
+    padding-top: 2rem;
+}
+
+.sidebar {
+    position: static !important;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+}
+
+/* Consultation Container */
+.consultation-container {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+}
+
+/* Consultation Header */
+.consultation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.consultation-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.consultation-header h2 i {
+    color: #2563eb;
+}
+
+/* Cancel Button - New Style */
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: white;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+}
+
+.btn-cancel:hover {
+    background: #f9fafb;
+    color: #374151;
+    border-color: #d1d5db;
+}
+
+.btn-cancel i {
+    font-size: 0.9rem;
+}
+
+/* Messages */
+.success-message {
+    background: #d1fae5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    color: #065f46;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.warning-message {
+    background: #fee2e2;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    color: #991b1b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Form Title */
+.form-title {
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.form-title i {
+    color: #2563eb;
+}
+
+/* Form Rows */
+.form-row-2-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.form-submit {
+    margin-top: 2rem;
+}
+
+.form-submit .btn {
+    width: 100%;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* Card */
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    padding: 1.5rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+/* Alert Badge */
+.alert-badge {
+    background: #ef4444;
+    color: white;
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 0.7rem;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 600;
+}
+
+/* logout button styling intentionally removed from consultation.css.
+   admin.css remains the only source for logout button colors. */
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .consultation-container {
+        padding: 0 1rem;
+    }
+    
+    .form-row-2-1,
+    .form-row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .consultation-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .card {
+        padding: 1rem;
+    }
+}

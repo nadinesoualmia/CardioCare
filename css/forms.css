@@ -1,0 +1,217 @@
+/* Form Styles */
+.auth-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    padding: 1rem;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-card {
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-muted);
+}
+
+.input-with-icon input,
+.input-with-icon select,
+.form-group input:not([type="checkbox"]):not([type="radio"]),
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: var(--transition);
+    background-color: #f8fafc;
+}
+
+.input-with-icon input,
+.input-with-icon select {
+    padding-left: 2.75rem !important;
+}
+
+/* Extra right padding when there's an eye-toggle icon on the right */
+.input-with-icon input[type="password"],
+.input-with-icon input[id="password"] {
+    padding-right: 2.75rem !important;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background-color: #fff;
+}
+
+/* Error states */
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea {
+    border-color: var(--danger-color);
+    background-color: #fef2f2;
+}
+
+.error-message {
+    display: block;
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    min-height: 1.2rem;
+}
+
+/* Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.forgot-password {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+}
+
+.auth-demo-info {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+/* User Profile Styles */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+}
+
+/* Printable Ticket Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #printableTicket,
+    #printableTicket * {
+        visibility: visible;
+    }
+
+    #printableTicket {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        font-family: monospace;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Ticket Styling */
+#printableTicket {
+    display: none;
+    padding: 20px;
+    border: 2px dashed #000;
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    background: white;
+}
+
+#printableTicket h2 {
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #000;
+    padding-bottom: 10px;
+}
+
+#printableTicket h3 {
+    margin: 5px 0;
+}
+
+#printableTicket p {
+    margin: 5px 0;
+}
+
+#printableTicket h1 {
+    font-size: 2.5em;
+    margin: 10px 0;
+}
