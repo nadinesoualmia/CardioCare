@@ -1,18 +1,18 @@
 <?php
 session_start();
 include 'backend/connection.php';
-
+ //lhna drna vérification.kan role machi "Nurse", narj3o ll home page index
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Nurse') {
     header("Location: index.php");
     exit();
 }
-
+// Get user info li ha tt3rd f l top navbar w li rah nst3mloha f l appointments query
 $userName   = $_SESSION['name']   ?? 'Nurse';
 $userRole   = $_SESSION['role']   ?? 'Nurse';
 $userAvatar = $_SESSION['avatar'] ?? 'https://ui-avatars.com/api/?name=' . urlencode($userName) . '&background=f59e0b&color=fff';
 $nurse_id   = $_SESSION['id'] ?? $_SESSION['user_id'] ?? null;
 
-// Get today's consultation appointments for this nurse OR unassigned
+// Get today's consultation appointments for this nurse ghir li khalsso w li ma daroch cancel wla complete
 $todayAppointments = $conn->prepare("
     SELECT a.*, p.full_name AS patient_name, d.full_name AS doctor_name
     FROM appointments a
@@ -41,18 +41,18 @@ $consultationPatients = $conn->prepare("
 $consultationPatients->execute();
 $consultationPatients = $consultationPatients->fetchAll(PDO::FETCH_ASSOC);
 
-// Get vitals with filters
+// Get vitals with filters ta3na li rah nst3mloha f l vitals history table
 $filter_patient = $_GET['filter_patient'] ?? '';
 $filter_date = $_GET['filter_date'] ?? date('Y-m-d');
 $filter_status = $_GET['filter_status'] ?? '';
-
+// Build vitals query with filters
 $vitalsQuery = "
     SELECT v.*, p.full_name AS patient_name
     FROM vitals v
     LEFT JOIN patients p ON v.patient_id = p.id
     WHERE 1=1
 ";
-
+// Add filters to query
 if ($filter_patient) {
     $vitalsQuery .= " AND p.full_name LIKE :patient";
 }
@@ -70,7 +70,7 @@ if ($filter_status) {
 }
 
 $vitalsQuery .= " ORDER BY v.created_at DESC LIMIT 100";
-
+// Prepare and execute query
 $stmt = $conn->prepare($vitalsQuery);
 if ($filter_patient) {
     $stmt->bindValue(':patient', "%$filter_patient%");
@@ -79,7 +79,7 @@ if ($filter_date) {
     $stmt->bindValue(':date', $filter_date);
 }
 $stmt->execute();
-$vitals = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$vitals = $stmt->fetchAll(PDO::FETCH_ASSOC);//yjib vitals accending l filters ta3na men database
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -740,7 +740,7 @@ $vitals = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<script>
+<script> 
 document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.querySelector('.toggle-sidebar-btn');
     const sidebar = document.querySelector('.sidebar');

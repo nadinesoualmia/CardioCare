@@ -14,9 +14,7 @@ $userAvatar = $_SESSION['avatar'] ?? "https://ui-avatars.com/api/?name=" . urlen
 $successMessage = null;
 $errorMessage   = null;
 
-/* ════════════════════════════════════════════════════
-   POST: Submit lab result
-════════════════════════════════════════════════════ */
+/* Submit lab result nb3t b mthod POST l backend w n3mlo update 3la request w insert f exam_results*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $request_id = intval($_POST['request_id'] ?? 0);
     $notes      = trim($_POST['notes'] ?? '');
