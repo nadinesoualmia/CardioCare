@@ -2,7 +2,7 @@
 session_start();
 include 'backend/connection.php';
 
-// ✅ Role guard — redirect to login if session is missing or wrong role
+//  Role guard — redirect to login if session is missing or wrong role
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Receptionist') {
     header("Location: login.php");
     exit();
@@ -28,18 +28,16 @@ $userAvatar = $_SESSION['avatar'] ?? 'https://ui-avatars.com/api/?name=R&backgro
     <link rel="stylesheet" href="css/receptionist.css">
     
     <style>
-        /* ========================================
-           SIDEBAR FIX - NO DARK BLUE BORDER LINE
-           ======================================== */
+       
         
-        /* Fix for main content - push right */
+        /*  push right */
         .main-content {
             margin-left: 260px;
             min-height: 100vh;
             background: #f1f5f9;
         }
         
-        /* Fix for sidebar - ensure fixed position */
+        /*  ensure fixed position */
         .sidebar {
             width: 260px;
             background: #ffffff;
@@ -106,7 +104,7 @@ $userAvatar = $_SESSION['avatar'] ?? 'https://ui-avatars.com/api/?name=R&backgro
         .nav-item.active {
             background: #eff6ff;
             color: #2563eb;
-            /* NO border-right - REMOVED */
+           
         }
         
         /* Sidebar footer */
