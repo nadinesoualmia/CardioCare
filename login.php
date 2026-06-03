@@ -1,6 +1,5 @@
 <?php
 session_start();
-// If user is already logged in, log them out first to prevent session conflicts
 if (isset($_SESSION['user_id'])) {
     session_unset();
     session_destroy();
@@ -8,32 +7,27 @@ if (isset($_SESSION['user_id'])) {
 }
 
 include_once 'backend/connection.php';
-// Check if connection was successful
 if (!isset($conn)) {
     die("Database connection failed. Check connection.php path.");
 }
 
 $error = '';
-//lhna ntha9o kan rass 3la login buttom or no
+
 if (isset($_POST['login'])) {
-//men lform njibo username w password w nahiw spaces using trim() for username
     $usernameOrEmail = trim($_POST['username']);
     $password        = $_POST['password'];
 
-// hadi l query li tfrket 3la user b username aw email
     $stmt = $conn->prepare("SELECT * FROM users WHERE (username = :u OR email = :u) LIMIT 1");
     $stmt->execute(['u' => $usernameOrEmail]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-// If user exists and password is correct
+
     if ($user && password_verify($password, $user['password'])) {
 
-// Check if account is active
         if ((int)$user['isActive'] === 0) {
             $error = "Your account has been deactivated. Please contact an administrator.";
         } else {
            
             session_regenerate_id(true);
-            // Store user info in session
             $_SESSION['id']       = $user['id'];  
             $_SESSION['user_id']  = $user['id'];
             $_SESSION['name']     = $user['full_name'];
@@ -141,7 +135,6 @@ if (isset($_POST['login'])) {
 </div>
 
 <script>
-    // Toggle password visibility
 document.getElementById('togglePassword').addEventListener('click', function () {
     const pw = document.getElementById('password');
     pw.type = pw.type === 'password' ? 'text' : 'password';
