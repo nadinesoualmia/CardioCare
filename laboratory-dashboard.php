@@ -78,8 +78,42 @@ $dateFilter = $_GET['date'] ?? 'today';
 $statusFilter = $_GET['status'] ?? 'all';
 $searchTerm = $_GET['search'] ?? '';
 
-// Base query for lab requests
-$sql = "
+$sqlCalendar = "
+    SELECT er.id, er.urgency, er.exam_type, er.status, er.created_at,
+           p.full_name AS patient_name,
+           u.full_name AS doctor_name,
+           a.payment_status,
+           a.queue_number,
+           a.appointment_date,
+           a.appointment_time,
+           eres.result, eres.file_path, eres.is_critical, eres.created_at as result_date
+    FROM exam_requests er
+    JOIN patients p ON p.id = er.patient_id
+    LEFT JOIN users u ON u.id = er.doctor_id
+    JOIN appointments a ON a.request_id = er.id
+    LEFT JOIN exam_results eres ON eres.request_id = er.id
+    WHERE er.department = 'laboratory'
+      AND a.payment_status = 'Paid'
+      AND er.status != 'completed'
+    ORDER BY a.appointment_date ASC, a.appointment_time ASC
+";
+
+$stmtCalendar = $conn->prepare($sqlCalendar);
+$stmtCalendar->execute();
+$allRequestsForCalendar = $stmtCalendar->fetchAll(PDO::FETCH_ASSOC);
+$appointmentsByDate = [];
+foreach ($allRequestsForCalendar as $req) {
+    $date = $req['appointment_date'];
+    if (!isset($appointmentsByDate[$date])) {
+        $appointmentsByDate[$date] = [];
+    }
+    $appointmentsByDate[$date][] = $req;
+}
+
+// ============================================================
+// 2. QUERY FOR TABLE 
+// ============================================================
+$sqlTable = "
     SELECT er.id, er.urgency, er.exam_type, er.status, er.created_at,
            p.full_name AS patient_name,
            u.full_name AS doctor_name,
@@ -101,44 +135,37 @@ $params = [];
 
 // Date filter
 if ($dateFilter === 'today') {
-    $sql .= " AND DATE(a.appointment_date) = CURDATE()";
+    $sqlTable .= " AND DATE(a.appointment_date) = CURDATE()";
 } elseif ($dateFilter === 'tomorrow') {
-    $sql .= " AND DATE(a.appointment_date) = CURDATE() + INTERVAL 1 DAY";
+    $sqlTable .= " AND DATE(a.appointment_date) = CURDATE() + INTERVAL 1 DAY";
 } elseif ($dateFilter === 'week') {
-    $sql .= " AND YEARWEEK(a.appointment_date) = YEARWEEK(CURDATE())";
+    $sqlTable .= " AND YEARWEEK(a.appointment_date) = YEARWEEK(CURDATE())";
 } elseif ($dateFilter && $dateFilter !== 'all' && $dateFilter !== 'today' && $dateFilter !== 'tomorrow' && $dateFilter !== 'week') {
-    $sql .= " AND DATE(a.appointment_date) = ?";
+    $sqlTable .= " AND DATE(a.appointment_date) = ?";
     $params[] = $dateFilter;
 }
 
-// Status filter
-if ($statusFilter && $statusFilter !== 'all') {
-    $sql .= " AND er.status = ?";
+// Status filter 
+if (empty($statusFilter) || $statusFilter === 'all') {
+    $sqlTable .= " AND er.status != 'completed'";
+} else {
+    // (scheduled, in_progress, completed)
+    $sqlTable .= " AND er.status = ?";
     $params[] = $statusFilter;
 }
 
 // Search filter
 if ($searchTerm) {
-    $sql .= " AND (p.full_name LIKE ? OR a.queue_number LIKE ?)";
+    $sqlTable .= " AND (p.full_name LIKE ? OR a.queue_number LIKE ?)";
     $params[] = "%$searchTerm%";
     $params[] = "%$searchTerm%";
 }
 
-$sql .= " ORDER BY a.appointment_date ASC, a.appointment_time ASC";
+$sqlTable .= " ORDER BY a.appointment_date ASC, a.appointment_time ASC";
 
-$stmt = $conn->prepare($sql);
-$stmt->execute($params);
-$labRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Group appointments by date for calendar
-$appointmentsByDate = [];
-foreach ($labRequests as $req) {
-    $date = $req['appointment_date'];
-    if (!isset($appointmentsByDate[$date])) {
-        $appointmentsByDate[$date] = [];
-    }
-    $appointmentsByDate[$date][] = $req;
-}
+$stmtTable = $conn->prepare($sqlTable);
+$stmtTable->execute($params);
+$labRequests = $stmtTable->fetchAll(PDO::FETCH_ASSOC);
 
 /* Stats - TODAY only */
 $pendingToday = $conn->query("
@@ -1325,7 +1352,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// FIXED: Auto-hide BOTH success AND error messages
+//Auto-hide BOTH success AND error messages
 // ============================================
 function autoHideMessages() {
     // Success message - hides after 5 seconds

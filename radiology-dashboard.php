@@ -70,13 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_id'])) {
 
 /* ════════════════════════════════════════════════════
    LOAD: Radiology requests with filters
+   ✅ MODIFIED: Status filter now works correctly
 ════════════════════════════════════════════════════ */
 $today = date('Y-m-d');
 $dateFilter = $_GET['date'] ?? 'today';
 $statusFilter = $_GET['status'] ?? 'all';
 $searchTerm = $_GET['search'] ?? '';
 
-// Base query for radiology requests
+// Base query for radiology requests (without excluding completed)
 $sql = "
     SELECT er.*,
            p.full_name AS patient_name,
@@ -109,8 +110,12 @@ if ($dateFilter === 'today') {
     $params[] = $dateFilter;
 }
 
-// Status filter
-if ($statusFilter && $statusFilter !== 'all') {
+// Status filter - exclude completed only when filter is 'all'
+if (empty($statusFilter) || $statusFilter === 'all') {
+    // If "All" is selected, exclude completed requests
+    $sql .= " AND er.status != 'completed'";
+} else {
+    // If specific status is selected (scheduled, in_progress, completed)
     $sql .= " AND er.status = ?";
     $params[] = $statusFilter;
 }
@@ -128,14 +133,17 @@ $stmt = $conn->prepare($sql);
 $stmt->execute($params);
 $pendingExams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Group requests by date for calendar
+// Group requests by date for calendar (only non-completed for calendar view)
 $requestsByDate = [];
 foreach ($pendingExams as $req) {
-    $date = $req['appointment_date'];
-    if (!isset($requestsByDate[$date])) {
-        $requestsByDate[$date] = [];
+    //  Only show non-completed requests in calendar
+    if ($req['status'] !== 'completed') {
+        $date = $req['appointment_date'];
+        if (!isset($requestsByDate[$date])) {
+            $requestsByDate[$date] = [];
+        }
+        $requestsByDate[$date][] = $req;
     }
-    $requestsByDate[$date][] = $req;
 }
 
 /* Stats - TODAY only */
@@ -1048,7 +1056,7 @@ $urgentStatCount = $conn->query("
                                 <td colspan="9" style="text-align:center; padding:1.5rem; color:#9ca3af;">
                                     <i class="fa-solid fa-x-ray" style="font-size:1.5rem; display:block; margin-bottom:0.5rem;"></i>
                                     No radiology requests found
-                                 </td>
+                                  </div>
                             </tr>
                         <?php else: foreach ($pendingExams as $req): ?>
                             <tr>
@@ -1065,7 +1073,7 @@ $urgentStatCount = $conn->query("
                                     <?php else: ?>
                                         <span class="badge-routine">Routine</span>
                                     <?php endif; ?>
-                                 </td>
+                                  </div>
                                 <td>
                                     <?php if ($req['status'] === 'scheduled'): ?>
                                         <span class="status-badge status-scheduled">Pending</span>
@@ -1074,7 +1082,7 @@ $urgentStatCount = $conn->query("
                                     <?php else: ?>
                                         <span class="status-badge status-completed">Completed</span>
                                     <?php endif; ?>
-                                 </td>
+                                  </div>
                                 <td>
                                     <?php if ($req['result']): ?>
                                         <div class="result-preview" title="<?= htmlspecialchars($req['result']) ?>">
@@ -1089,7 +1097,7 @@ $urgentStatCount = $conn->query("
                                     <?php if (!$req['result'] && !$req['file_path']): ?>
                                         <span style="color:#9ca3af; font-size:0.65rem;">No result yet</span>
                                     <?php endif; ?>
-                                 </td>
+                                  </div>
                                 <td>
                                     <?php if ($req['status'] !== 'completed'): ?>
                                         <button class="action-btn" onclick="selectRequest(<?= $req['id'] ?>, '<?= htmlspecialchars(addslashes($req['patient_name'])) ?>', '<?= htmlspecialchars(addslashes($req['exam_type'])) ?>', '<?= $req['queue_number'] ?>')">
@@ -1098,7 +1106,7 @@ $urgentStatCount = $conn->query("
                                     <?php else: ?>
                                         <span style="color:#10b981; font-size:0.65rem;"><i class="fa-solid fa-check-circle"></i> Done</span>
                                     <?php endif; ?>
-                                 </td>
+                                  </div>
                             </tr>
                         <?php endforeach; endif; ?>
                     </tbody>
